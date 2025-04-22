@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.project.system.mapper.ProHouseMapper">
+    
+    <resultMap type="ProHouse" id="ProHouseResult">
+        <result property="id"    column="id"    />
+        <result property="pic"    column="pic"    />
+        <result property="huxing"    column="huxing"    />
+        <result property="price"    column="price"    />
+        <result property="characteristic"    column="characteristic"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="userName"    column="user_name"    />
+    </resultMap>
+
+    <sql id="selectProHouseVo">
+        select p.id, p.pic, p.huxing, p.price, p.characteristic, p.create_by, p.create_time, p.status, su.nick_name as user_name from pro_house p
+        left join sys_user su on su.user_id = p.create_by
+    </sql>
+
+    <select id="selectProHouseList" parameterType="ProHouse" resultMap="ProHouseResult">
+        <include refid="selectProHouseVo"/>
+        <where>  
+            <if test="pic != null  and pic != ''"> and p.pic = #{pic}</if>
+            <if test="huxing != null  and huxing != ''"> and p.huxing = #{huxing}</if>
+            <if test="price != null "> and p.price = #{price}</if>
+            <if test="characteristic != null  and characteristic != ''"> and p.characteristic = #{characteristic}</if>
+            <if test="status != null  and status != ''"> and p.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectProHouseById" parameterType="Long" resultMap="ProHouseResult">
+        <include refid="selectProHouseVo"/>
+        where p.id = #{id}
+    </select>
+        
+    <insert id="insertProHouse" parameterType="ProHouse" useGeneratedKeys="true" keyProperty="id">
+        insert into pro_house
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pic != null and pic != ''">pic,</if>
+            <if test="huxing != null and huxing != ''">huxing,</if>
+            <if test="price != null">price,</if>
+            <if test="characteristic != null and characteristic != ''">characteristic,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null and status != ''">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pic != null and pic != ''">#{pic},</if>
+            <if test="huxing != null and huxing != ''">#{huxing},</if>
+            <if test="price != null">#{price},</if>
+            <if test="characteristic != null and characteristic != ''">#{characteristic},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProHouse" parameterType="ProHouse">
+        update pro_house
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pic != null and pic != ''">pic = #{pic},</if>
+            <if test="huxing != null and huxing != ''">huxing = #{huxing},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="characteristic != null and characteristic != ''">characteristic = #{characteristic},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProHouseById" parameterType="Long">
+        delete from pro_house where id = #{id}
+    </delete>
+
+    <delete id="deleteProHouseByIds" parameterType="String">
+        delete from pro_house where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

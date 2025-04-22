@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.project.system.mapper.ProRepireMapper">
+    
+    <resultMap type="ProRepire" id="ProRepireResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="address"    column="address"    />
+        <result property="remark"    column="remark"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="repireId"    column="repire_id"    />
+        <result property="repireName"    column="repire_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="repireContent"    column="repire_content"    />
+    </resultMap>
+
+    <sql id="selectProRepireVo">
+        select p.id, p.type, p.address, p.remark, p.user_id, p.repire_id, p.create_time, p.status, p.repire_content, su.nick_name as user_name, su1.nick_name as repire_name from pro_repire p
+        left join sys_user su on su.user_id = p.user_id
+        left join sys_user su1 on su1.user_id = p.repire_id
+    </sql>
+
+    <select id="selectProRepireList" parameterType="ProRepire" resultMap="ProRepireResult">
+        <include refid="selectProRepireVo"/>
+        <where>  
+            <if test="type != null  and type != ''"> and p.type = #{type}</if>
+            <if test="address != null  and address != ''"> and p.address = #{address}</if>
+            <if test="userId != null "> and p.user_id = #{userId}</if>
+            <if test="repireId != null "> and p.repire_id = #{repireId}</if>
+            <if test="status != null  and status != ''"> and p.status = #{status}</if>
+            <if test="repireContent != null  and repireContent != ''"> and p.repire_content = #{repireContent}</if>
+        </where>
+    </select>
+    
+    <select id="selectProRepireById" parameterType="Long" resultMap="ProRepireResult">
+        <include refid="selectProRepireVo"/>
+        where p.id = #{id}
+    </select>
+        
+    <insert id="insertProRepire" parameterType="ProRepire" useGeneratedKeys="true" keyProperty="id">
+        insert into pro_repire
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null and type != ''">type,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="repireId != null">repire_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+            <if test="repireContent != null">repire_content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="repireId != null">#{repireId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="repireContent != null">#{repireContent},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProRepire" parameterType="ProRepire">
+        update pro_repire
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="repireId != null">repire_id = #{repireId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="repireContent != null">repire_content = #{repireContent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProRepireById" parameterType="Long">
+        delete from pro_repire where id = #{id}
+    </delete>
+
+    <delete id="deleteProRepireByIds" parameterType="String">
+        delete from pro_repire where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.project.system.mapper.ProBiaozhunMapper">
+    
+    <resultMap type="ProBiaozhun" id="ProBiaozhunResult">
+        <result property="id"    column="id"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="price"    column="price"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="userName"    column="user_name"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateUserName"    column="update_user_name"    />
+    </resultMap>
+
+    <sql id="selectProBiaozhunVo">
+        select p.id, p.type_name,p.price, p.create_time, p.create_by, p.update_time, p.update_by, su.nick_name as user_name, su1.nick_name as update_user_name from pro_biaozhun p
+        left join sys_user su on su.user_id = p.create_by
+        left join sys_user su1 on su1.user_id = p.update_by
+    </sql>
+
+    <select id="selectProBiaozhunList" parameterType="ProBiaozhun" resultMap="ProBiaozhunResult">
+        <include refid="selectProBiaozhunVo"/>
+        <where>  
+            <if test="typeName != null  and typeName != ''"> and p.type_name like concat('%', #{typeName}, '%')</if>
+            <if test="price != null "> and p.price = #{price}</if>
+        </where>
+    </select>
+    
+    <select id="selectProBiaozhunById" parameterType="Long" resultMap="ProBiaozhunResult">
+        <include refid="selectProBiaozhunVo"/>
+        where p.id = #{id}
+    </select>
+        
+    <insert id="insertProBiaozhun" parameterType="ProBiaozhun" useGeneratedKeys="true" keyProperty="id">
+        insert into pro_biaozhun
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''">type_name,</if>
+            <if test="price != null">price,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''">#{typeName},</if>
+            <if test="price != null">#{price},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProBiaozhun" parameterType="ProBiaozhun">
+        update pro_biaozhun
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''">type_name = #{typeName},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProBiaozhunById" parameterType="Long">
+        delete from pro_biaozhun where id = #{id}
+    </delete>
+
+    <delete id="deleteProBiaozhunByIds" parameterType="String">
+        delete from pro_biaozhun where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

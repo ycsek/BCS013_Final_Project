@@ -1,0 +1,61 @@
+package com.project.project.system.mapper;
+
+import java.util.List;
+import com.project.project.system.domain.ProHouse;
+
+/**
+ * 租房发布Mapper接口
+ * 
+ * @author adminApi
+ * @date 2025-03-29
+ */
+public interface ProHouseMapper 
+{
+    /**
+     * 查询租房发布
+     * 
+     * @param id 租房发布主键
+     * @return 租房发布
+     */
+    public ProHouse selectProHouseById(Long id);
+
+    /**
+     * 查询租房发布列表
+     * 
+     * @param proHouse 租房发布
+     * @return 租房发布集合
+     */
+    public List<ProHouse> selectProHouseList(ProHouse proHouse);
+
+    /**
+     * 新增租房发布
+     * 
+     * @param proHouse 租房发布
+     * @return 结果
+     */
+    public int insertProHouse(ProHouse proHouse);
+
+    /**
+     * 修改租房发布
+     * 
+     * @param proHouse 租房发布
+     * @return 结果
+     */
+    public int updateProHouse(ProHouse proHouse);
+
+    /**
+     * 删除租房发布
+     * 
+     * @param id 租房发布主键
+     * @return 结果
+     */
+    public int deleteProHouseById(Long id);
+
+    /**
+     * 批量删除租房发布
+     * 
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteProHouseByIds(Long[] ids);
+}
